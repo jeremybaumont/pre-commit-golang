@@ -3,14 +3,10 @@
 failed=false
 
 for file in "$@"; do
-    SRC_PATTERN="vendor/"
-    echo "$file" | if egrep -v --quiet "^$SRC_PATTERN"
+    # redirect stderr so that violations and summaries are properly interleaved.
+    if ! golint -set_exit_status "$file" 2>&1
     then
-        # redirect stderr so that violations and summaries are properly interleaved.
-        if ! golint -set_exit_status "$file" 2>&1
-        then
-            failed=true
-        fi
+        failed=true
     fi
 done
 
